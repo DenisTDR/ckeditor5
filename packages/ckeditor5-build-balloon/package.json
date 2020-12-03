@@ -1,6 +1,6 @@
 {
-  "name": "@ckeditor/ckeditor5-build-balloon",
-  "version": "23.1.0",
+  "name": "@mcms-cs/ckeditor5-build-balloon",
+  "version": "23.1.1",
   "description": "The balloon editor build of CKEditor 5 – the best browser-based rich text editor.",
   "keywords": [
     "wysiwyg",
@@ -45,8 +45,9 @@
     "@ckeditor/ckeditor5-paragraph": "^23.1.0",
     "@ckeditor/ckeditor5-paste-from-office": "^23.1.0",
     "@ckeditor/ckeditor5-table": "^23.1.0",
-    "@ckeditor/ckeditor5-typing": "^23.1.0",
     "@ckeditor/ckeditor5-theme-lark": "^23.1.0",
+    "@ckeditor/ckeditor5-typing": "^23.1.0",
+    "@ckeditor/ckeditor5-upload": "^23.1.0",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^4.0.1",
     "style-loader": "^1.2.1",
@@ -64,7 +65,7 @@
   "bugs": "https://github.com/ckeditor/ckeditor5/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ckeditor/ckeditor5.git",
+    "url": "https://github.com/DenisTDR/mcms-ckeditor5.git",
     "directory": "packages/ckeditor5-build-balloon"
   },
   "scripts": {

@@ -34,7 +34,7 @@ And use it in your website:
 </div>
 <script src="./node_modules/@ckeditor/ckeditor5-build-balloon/build/ckeditor.js"></script>
 <script>
-	BalloonEditor
+	BalloonEditorMcms
 		.create( document.querySelector( '#editor' ) )
 		.then( editor => {
 			window.editor = editor;
@@ -48,12 +48,12 @@ And use it in your website:
 Or in your JavaScript application:
 
 ```js
-import BalloonEditor from '@ckeditor/ckeditor5-build-balloon';
+import BalloonEditorMcms from '@ckeditor/ckeditor5-build-balloon';
 
 // Or using the CommonJS version:
-// const BalloonEditor = require( '@ckeditor/ckeditor5-build-balloon' );
+// const BalloonEditorMcms = require( '@ckeditor/ckeditor5-build-balloon' );
 
-BalloonEditor
+BalloonEditorMcms
 	.create( document.querySelector( '#editor' ) )
 	.then( editor => {
 		window.editor = editor;

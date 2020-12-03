@@ -29,11 +29,13 @@ import PasteFromOffice from '@ckeditor/ckeditor5-paste-from-office/src/pastefrom
 import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
+import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter";
 
-export default class BalloonEditor extends BalloonEditorBase {}
+export default class BalloonEditorMcms extends BalloonEditorBase {
+}
 
 // Plugins to include in the build.
-BalloonEditor.builtinPlugins = [
+BalloonEditorMcms.builtinPlugins = [
 	Essentials,
 	UploadAdapter,
 	Autoformat,
@@ -42,6 +44,7 @@ BalloonEditor.builtinPlugins = [
 	BlockQuote,
 	CKFinder,
 	EasyImage,
+	SimpleUploadAdapter,
 	Heading,
 	Image,
 	ImageCaption,
@@ -60,7 +63,7 @@ BalloonEditor.builtinPlugins = [
 ];
 
 // Editor configuration.
-BalloonEditor.defaultConfig = {
+BalloonEditorMcms.defaultConfig = {
 	toolbar: {
 		items: [
 			'heading',
@@ -84,11 +87,10 @@ BalloonEditor.defaultConfig = {
 	},
 	image: {
 		toolbar: [
-			'imageStyle:full',
-			'imageStyle:side',
-			'|',
-			'imageTextAlternative'
-		]
+			'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight'
+		],
+		styles: ['full', 'alignLeft', 'alignRight'],
+		types: ['jpeg', 'png', 'gif', 'bmp', 'webp', 'tiff', 'svg'],
 	},
 	table: {
 		contentToolbar: [
@@ -96,6 +98,16 @@ BalloonEditor.defaultConfig = {
 			'tableRow',
 			'mergeTableCells'
 		]
+	},
+	link: {
+		addTargetToExternalLinks: true,
+	},
+	simpleUpload: {
+		uploadUrl: '/api/FilesUpload/UploadCkEditor',
+		withCredentials: true,
+		headers: {
+			'purpose': 'ckeditor'
+		},
 	},
 	// This value must be kept in sync with the language defined in webpack.config.js.
 	language: 'en'
