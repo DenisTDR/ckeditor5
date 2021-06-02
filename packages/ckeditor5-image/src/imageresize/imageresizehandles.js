@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,9 +7,16 @@
  * @module image/imageresize/imageresizehandles
  */
 
-import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import WidgetResize from '@ckeditor/ckeditor5-widget/src/widgetresize';
+import { Plugin } from 'ckeditor5/src/core';
+import { WidgetResize } from 'ckeditor5/src/widget';
+
 import ImageLoadObserver from '../image/imageloadobserver';
+
+const RESIZABLE_IMAGES_CSS_SELECTOR = 'figure.image.ck-widget > img,' +
+	'figure.image.ck-widget > a > img,' +
+	'span.image-inline.ck-widget > img';
+
+const IMAGE_WIDGETS_CLASSES_MATCH_REGEXP = /(image|image-inline)/;
 
 /**
  * The image resize by handles feature.
@@ -38,7 +45,7 @@ export default class ImageResizeHandles extends Plugin {
 	 * @inheritDoc
 	 */
 	init() {
-		const command = this.editor.commands.get( 'imageResize' );
+		const command = this.editor.commands.get( 'resizeImage' );
 		this.bind( 'isEnabled' ).to( command );
 
 		this._setupResizerCreator();
@@ -56,18 +63,19 @@ export default class ImageResizeHandles extends Plugin {
 		editingView.addObserver( ImageLoadObserver );
 
 		this.listenTo( editingView.document, 'imageLoaded', ( evt, domEvent ) => {
-			// The resizer must be attached only to images loaded by the `ImageInsert` or `ImageUpload` plugins.
-			if ( !domEvent.target.matches( 'figure.image.ck-widget > img' ) ) {
+			// The resizer must be attached only to images loaded by the `ImageInsert`, `ImageUpload` or `LinkImage` plugins.
+			if ( !domEvent.target.matches( RESIZABLE_IMAGES_CSS_SELECTOR ) ) {
 				return;
 			}
 
-			const imageView = editor.editing.view.domConverter.domToView( domEvent.target );
-			const widgetView = imageView.findAncestor( 'figure' );
+			const domConverter = editor.editing.view.domConverter;
+			const imageView = domConverter.domToView( domEvent.target );
+			const widgetView = imageView.findAncestor( { classes: IMAGE_WIDGETS_CLASSES_MATCH_REGEXP } );
 			let resizer = this.editor.plugins.get( WidgetResize ).getResizerByViewElement( widgetView );
 
 			if ( resizer ) {
-				// There are rare cases when image will be triggered multiple times for the same widget, e.g. when
-				// image's src was changed after upload (https://github.com/ckeditor/ckeditor5/pull/8108#issuecomment-708302992).
+				// There are rare cases when the image will be triggered multiple times for the same widget, e.g. when
+				// the image's source was changed after upload (https://github.com/ckeditor/ckeditor5/pull/8108#issuecomment-708302992).
 				resizer.redraw();
 
 				return;
@@ -88,8 +96,9 @@ export default class ImageResizeHandles extends Plugin {
 					getHandleHost( domWidgetElement ) {
 						return domWidgetElement.querySelector( 'img' );
 					},
-					getResizeHost( domWidgetElement ) {
-						return domWidgetElement;
+					getResizeHost() {
+						// Return the model image element parent to avoid setting an inline element (<a>/<span>) as a resize host.
+						return domConverter.viewToDom( mapper.toViewElement( imageModel.parent ) );
 					},
 					// TODO consider other positions.
 					isCentered() {
@@ -99,7 +108,7 @@ export default class ImageResizeHandles extends Plugin {
 					},
 
 					onCommit( newValue ) {
-						editor.execute( 'imageResize', { width: newValue } );
+						editor.execute( 'resizeImage', { width: newValue } );
 					}
 				} );
 

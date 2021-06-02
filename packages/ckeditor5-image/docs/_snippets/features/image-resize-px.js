@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -14,32 +14,27 @@ ClassicEditor
 			resizeUnit: 'px',
 			resizeOptions: [
 				{
-					name: 'imageResize:original',
+					name: 'resizeImage:original',
 					label: 'Original',
 					value: null
 				},
 				{
-					name: 'imageResize:250',
+					name: 'resizeImage:250',
 					label: '250px',
 					value: '250'
 				},
 				{
-					name: 'imageResize:400',
+					name: 'resizeImage:400',
 					label: '400px',
 					value: '400'
 				}
 			],
-			styles: [
-				'alignLeft',
-				'alignCenter',
-				'alignRight'
-			],
 			toolbar: [
-				'imageStyle:alignLeft',
-				'imageStyle:alignCenter',
-				'imageStyle:alignRight',
+				'imageStyle:inline',
+				'imageStyle:wrapText',
+				'imageStyle:breakText',
 				'|',
-				'imageResize'
+				'resizeImage'
 			]
 		},
 		toolbar: {

@@ -106,7 +106,7 @@ ClassicEditor.defaultConfig = {
 			'link',
 			'bulletedList',
 			'numberedList',
-			'imageUpload',
+			'uploadImage',
 			'blockQuote',
 			'undo',
 			'redo'
@@ -114,9 +114,11 @@ ClassicEditor.defaultConfig = {
 	},
 	image: {
 		toolbar: [
+			'imageStyle:inline',
 			'imageStyle:full',
 			'imageStyle:side',
 			'|',
+			'toggleImageCaption',
 			'imageTextAlternative'
 		]
 	},

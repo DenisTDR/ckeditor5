@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,16 +7,18 @@
  * @module widget/utils
  */
 
-import HighlightStack from './highlightstack';
-import IconView from '@ckeditor/ckeditor5-ui/src/icon/iconview';
-import Rect from '@ckeditor/ckeditor5-utils/src/dom/rect';
 import BalloonPanelView from '@ckeditor/ckeditor5-ui/src/panel/balloon/balloonpanelview';
+
 import global from '@ckeditor/ckeditor5-utils/src/dom/global';
+import Rect from '@ckeditor/ckeditor5-utils/src/dom/rect';
 import CKEditorError from '@ckeditor/ckeditor5-utils/src/ckeditorerror';
 import toArray from '@ckeditor/ckeditor5-utils/src/toarray';
 
-import dragHandleIcon from '../theme/icons/drag-handle.svg';
+import HighlightStack from './highlightstack';
 import { getTypeAroundFakeCaretPosition } from './widgettypearound/utils';
+
+import IconView from '@ckeditor/ckeditor5-ui/src/icon/iconview';
+import dragHandleIcon from '../theme/icons/drag-handle.svg';
 
 /**
  * CSS class added to each widget element.
@@ -122,14 +124,45 @@ export function toWidget( element, writer, options = {} ) {
 		addSelectionHandle( element, writer );
 	}
 
-	setHighlightHandling(
-		element,
-		writer,
-		( element, descriptor, writer ) => writer.addClass( toArray( descriptor.classes ), element ),
-		( element, descriptor, writer ) => writer.removeClass( toArray( descriptor.classes ), element )
-	);
+	setHighlightHandling( element, writer, addHighlight, removeHighlight );
 
 	return element;
+}
+
+// Default handler for adding a highlight on a widget.
+// It adds CSS class and attributes basing on the given highlight descriptor.
+//
+// @param {module:engine/view/element~Element} element
+// @param {module:engine/conversion/downcasthelpers~HighlightDescriptor} descriptor
+// @param {module:engine/view/downcastwriter~DowncastWriter} writer
+function addHighlight( element, descriptor, writer ) {
+	if ( descriptor.classes ) {
+		writer.addClass( toArray( descriptor.classes ), element );
+	}
+
+	if ( descriptor.attributes ) {
+		for ( const key in descriptor.attributes ) {
+			writer.setAttribute( key, descriptor.attributes[ key ], element );
+		}
+	}
+}
+
+// Default handler for removing a highlight from a widget.
+// It removes CSS class and attributes basing on the given highlight descriptor.
+//
+// @param {module:engine/view/element~Element} element
+// @param {module:engine/conversion/downcasthelpers~HighlightDescriptor} descriptor
+// @param {module:engine/view/downcastwriter~DowncastWriter} writer
+function removeHighlight( element, descriptor, writer ) {
+	if ( descriptor.classes ) {
+		writer.removeClass( toArray( descriptor.classes ), element );
+	}
+
+	if ( descriptor.attributes ) {
+		for ( const key in descriptor.attributes ) {
+			writer.removeAttribute( key, element );
+		}
+	}
 }
 
 /**
@@ -249,22 +282,22 @@ export function toWidgetEditable( editable, writer ) {
 }
 
 /**
- * Returns a model position which is optimal (in terms of UX) for inserting a widget block.
+ * Returns a model range which is optimal (in terms of UX) for inserting a widget block.
  *
- * For instance, if a selection is in the middle of a paragraph, the position before this paragraph
+ * For instance, if a selection is in the middle of a paragraph, the collapsed range before this paragraph
  * will be returned so that it is not split. If the selection is at the end of a paragraph,
- * the position after this paragraph will be returned.
+ * the collapsed range after this paragraph will be returned.
  *
- * Note: If the selection is placed in an empty block, that block will be returned. If that position
- * is then passed to {@link module:engine/model/model~Model#insertContent},
- * the block will be fully replaced by the image.
+ * Note: If the selection is placed in an empty block, the range in that block will be returned. If that range
+ * is then passed to {@link module:engine/model/model~Model#insertContent}, the block will be fully replaced
+ * by the inserted widget block.
  *
  * @param {module:engine/model/selection~Selection|module:engine/model/documentselection~DocumentSelection} selection
  * The selection based on which the insertion position should be calculated.
  * @param {module:engine/model/model~Model} model Model instance.
- * @returns {module:engine/model/position~Position} The optimal position.
+ * @returns {module:engine/model/range~Range} The optimal range.
  */
-export function findOptimalInsertionPosition( selection, model ) {
+export function findOptimalInsertionRange( selection, model ) {
 	const selectedElement = selection.getSelectedElement();
 
 	if ( selectedElement ) {
@@ -273,11 +306,11 @@ export function findOptimalInsertionPosition( selection, model ) {
 		// If the WidgetTypeAround "fake caret" is displayed, use its position for the insertion
 		// to provide the most predictable UX (https://github.com/ckeditor/ckeditor5/issues/7438).
 		if ( typeAroundFakeCaretPosition ) {
-			return model.createPositionAt( selectedElement, typeAroundFakeCaretPosition );
+			return model.createRange( model.createPositionAt( selectedElement, typeAroundFakeCaretPosition ) );
 		}
 
-		if ( model.schema.isBlock( selectedElement ) ) {
-			return model.createPositionAfter( selectedElement );
+		if ( model.schema.isObject( selectedElement ) && !model.schema.isInline( selectedElement ) ) {
+			return model.createRangeOn( selectedElement );
 		}
 	}
 
@@ -287,21 +320,21 @@ export function findOptimalInsertionPosition( selection, model ) {
 		// If inserting into an empty block – return position in that block. It will get
 		// replaced with the image by insertContent(). #42.
 		if ( firstBlock.isEmpty ) {
-			return model.createPositionAt( firstBlock, 0 );
+			return model.createRange( model.createPositionAt( firstBlock, 0 ) );
 		}
 
 		const positionAfter = model.createPositionAfter( firstBlock );
 
 		// If selection is at the end of the block - return position after the block.
 		if ( selection.focus.isTouching( positionAfter ) ) {
-			return positionAfter;
+			return model.createRange( positionAfter );
 		}
 
 		// Otherwise return position before the block.
-		return model.createPositionBefore( firstBlock );
+		return model.createRange( model.createPositionBefore( firstBlock ) );
 	}
 
-	return selection.focus;
+	return model.createRange( selection.focus );
 }
 
 /**

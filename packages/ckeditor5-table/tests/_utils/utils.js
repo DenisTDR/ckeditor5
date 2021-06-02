@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -382,8 +382,11 @@ function makeRows( tableData, options ) {
 				}
 
 				if ( !( contents.replace( '[', '' ).replace( ']', '' ).startsWith( '<' ) ) && enforceWrapping ) {
+					const wrappingElementStart = wrappingElement == 'span' ?
+						'span class="ck-table-bogus-paragraph"' : wrappingElement;
+
 					contents =
-						`<${ wrappingElement == 'span' ? 'span style="display:inline-block"' : wrappingElement }>` +
+						`<${ wrappingElementStart }>` +
 						contents +
 						`</${ wrappingElement }>`;
 				}

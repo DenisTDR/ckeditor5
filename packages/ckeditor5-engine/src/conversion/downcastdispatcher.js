@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -390,8 +390,8 @@ export default class DowncastDispatcher {
 	 * @param {module:engine/view/downcastwriter~DowncastWriter} writer View writer that should be used to modify the view document.
 	 */
 	convertMarkerAdd( markerName, markerRange, writer ) {
-		// Do not convert if range is in graveyard or not in the document (e.g. in DocumentFragment).
-		if ( !markerRange.root.document || markerRange.root.rootName == '$graveyard' ) {
+		// Do not convert if range is in graveyard.
+		if ( markerRange.root.rootName == '$graveyard' ) {
 			return;
 		}
 
@@ -445,8 +445,8 @@ export default class DowncastDispatcher {
 	 * @param {module:engine/view/downcastwriter~DowncastWriter} writer View writer that should be used to modify the view document.
 	 */
 	convertMarkerRemove( markerName, markerRange, writer ) {
-		// Do not convert if range is in graveyard or not in the document (e.g. in DocumentFragment).
-		if ( !markerRange.root.document || markerRange.root.rootName == '$graveyard' ) {
+		// Do not convert if range is in graveyard.
+		if ( markerRange.root.rootName == '$graveyard' ) {
 			return;
 		}
 
@@ -736,7 +736,7 @@ export default class DowncastDispatcher {
 	 * `name` is either `'$text'` if change was on {@link module:engine/model/text~Text a text node},
 	 * or the {@link module:engine/model/element~Element#name name} of element which attribute has changed.
 	 *
-	 * This way listeners can either listen to a general `attribute:bold` event or specific event (for example `attribute:src:image`).
+	 * This way listeners can either listen to a general `attribute:bold` event or specific event (for example `attribute:src:imageBlock`).
 	 *
 	 * @event attribute
 	 * @param {Object} data Additional information about the change.

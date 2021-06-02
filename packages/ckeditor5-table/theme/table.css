@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -48,4 +48,18 @@ when content is available outside the ediitor. See https://github.com/ckeditor/c
 
 .ck-content[dir="ltr"] .table th {
 	text-align: left;
+}
+
+.ck-editor__editable .ck-table-bogus-paragraph {
+	/*
+	 * Use display:inline-block to force Chrome/Safari to limit text mutations to this element.
+	 * See https://github.com/ckeditor/ckeditor5/issues/6062.
+	 */
+	display: inline-block;
+
+	/*
+	 * Inline HTML elements nested in the span should always be dimensioned in relation to the whole cell width.
+	 * See https://github.com/ckeditor/ckeditor5/issues/9117.
+	 */
+	width: 100%;
 }

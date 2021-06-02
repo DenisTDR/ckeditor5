@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -7,8 +7,9 @@
  * @module code-block/codeblockcommand
  */
 
-import Command from '@ckeditor/ckeditor5-core/src/command';
-import first from '@ckeditor/ckeditor5-utils/src/first';
+import { Command } from 'ckeditor5/src/core';
+import { first } from 'ckeditor5/src/utils';
+
 import { getNormalizedAndLocalizedLanguageDefinitions } from './utils';
 
 /**
@@ -114,6 +115,11 @@ export default class CodeBlockCommand extends Command {
 			writer.rename( block, 'codeBlock' );
 			writer.setAttribute( 'language', language, block );
 			schema.removeDisallowedAttributes( [ block ], writer );
+
+			// Remove children of the  `codeBlock` element that are not allowed. See #9567.
+			Array.from( block.getChildren() )
+				.filter( child => !schema.checkChild( block, child ) )
+				.forEach( child => writer.remove( child ) );
 		}
 
 		allowedBlocks.reverse().forEach( ( currentBlock, i ) => {

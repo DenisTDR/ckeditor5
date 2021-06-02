@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -249,6 +249,32 @@ describe( 'CodeBlockCommand', () => {
 			command.execute( { language: 'css', forceValue: true } );
 
 			expect( getModelData( model ) ).to.equal( '<codeBlock language="css">f[o]o</codeBlock>' );
+		} );
+
+		it( 'should remove all non-allowed nodes when inserting the "codeBlock" element', () => {
+			model.schema.register( 'div', { inheritAllFrom: '$block', allowIn: 'paragraph' } );
+			editor.conversion.elementToElement( { model: 'div', view: 'div' } );
+
+			setModelData( model, '[<paragraph>Foo<div></div>Bar</paragraph>]' );
+
+			command.execute();
+
+			expect( getModelData( model ) ).to.equal(
+				'<codeBlock language="plaintext">[FooBar]</codeBlock>'
+			);
+		} );
+
+		it( 'should remove all non-allowed nodes when inserting the "codeBlock" element (the softBreak check)', () => {
+			model.schema.register( 'div', { inheritAllFrom: '$block', allowIn: 'paragraph' } );
+			editor.conversion.elementToElement( { model: 'div', view: 'div' } );
+
+			setModelData( model, '[<paragraph>Foo<div></div>Bar<softBreak></softBreak>Baz</paragraph>]' );
+
+			command.execute();
+
+			expect( getModelData( model ) ).to.equal(
+				'<codeBlock language="plaintext">[FooBar<softBreak></softBreak>Baz]</codeBlock>'
+			);
 		} );
 	} );
 

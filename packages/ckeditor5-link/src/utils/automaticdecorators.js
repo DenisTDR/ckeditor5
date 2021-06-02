@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -7,7 +7,7 @@
  * @module link/utils
  */
 
-import toMap from '@ckeditor/ckeditor5-utils/src/tomap';
+import { toMap } from 'ckeditor5/src/utils';
 
 /**
  * Helper class that ties together all {@link module:link/link~LinkDecoratorAutomaticDefinition} and provides
@@ -97,7 +97,7 @@ export default class AutomaticDecorators {
 	 */
 	getDispatcherForLinkedImage() {
 		return dispatcher => {
-			dispatcher.on( 'attribute:linkHref:image', ( evt, data, conversionApi ) => {
+			dispatcher.on( 'attribute:linkHref:imageBlock', ( evt, data, conversionApi ) => {
 				const viewFigure = conversionApi.mapper.toViewElement( data.item );
 				const linkInImage = Array.from( viewFigure.getChildren() ).find( child => child.name === 'a' );
 

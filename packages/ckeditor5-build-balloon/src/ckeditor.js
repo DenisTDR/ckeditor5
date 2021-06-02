@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -30,6 +30,7 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter";
+import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 
 export default class BalloonEditorMcms extends BalloonEditorBase {
 }
@@ -43,6 +44,7 @@ BalloonEditorMcms.builtinPlugins = [
 	Italic,
 	BlockQuote,
 	CKFinder,
+	CloudServices,
 	EasyImage,
 	SimpleUploadAdapter,
 	Heading,
@@ -74,10 +76,10 @@ BalloonEditorMcms.defaultConfig = {
 			'bulletedList',
 			'numberedList',
 			'|',
-			'indent',
 			'outdent',
+			'indent',
 			'|',
-			'imageUpload',
+			'uploadImage',
 			'blockQuote',
 			'insertTable',
 			'mediaEmbed',

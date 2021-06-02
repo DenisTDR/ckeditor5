@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -8,8 +8,8 @@
  */
 
 import TableWalker from './../tablewalker';
-import { setHighlightHandling, toWidget, toWidgetEditable } from '@ckeditor/ckeditor5-widget/src/utils';
-import toArray from '@ckeditor/ckeditor5-utils/src/toarray';
+import { setHighlightHandling, toWidget, toWidgetEditable } from 'ckeditor5/src/widget';
+import { toArray } from 'ckeditor5/src/utils';
 
 /**
  * Model table element to view table element conversion helper.
@@ -74,7 +74,8 @@ export function downcastInsertTable( options = {} ) {
 		for ( const tableRow of table.getChildren() ) {
 			const rowIndex = tableRow.index;
 
-			if ( !viewRows.has( rowIndex ) ) {
+			// Make sure that this is a table row and not some other element (i.e., caption).
+			if ( tableRow.is( 'element', 'tableRow' ) && !viewRows.has( rowIndex ) ) {
 				viewRows.set( rowIndex, createTr( tableElement, tableRow, rowIndex, tableAttributes, conversionApi ) );
 			}
 		}
@@ -257,9 +258,7 @@ export function convertParagraphInTableCell( modelElement, conversionApi ) {
 	}
 
 	if ( isSingleParagraphWithoutAttributes( modelElement ) ) {
-		// Use display:inline-block to force Chrome/Safari to limit text mutations to this element.
-		// See #6062.
-		return writer.createContainerElement( 'span', { style: 'display:inline-block' } );
+		return writer.createContainerElement( 'span', { class: 'ck-table-bogus-paragraph' } );
 	} else {
 		return writer.createContainerElement( 'p' );
 	}
@@ -270,7 +269,7 @@ export function convertParagraphInTableCell( modelElement, conversionApi ) {
  *
  * The paragraph should be converted in the editing view to:
  *
- * * If returned `true` - to a `<span style="display:inline-block">`
+ * * If returned `true` - to a `<span class="ck-table-bogus-paragraph">`
  * * If returned `false` - to a `<p>`
  *
  * @param {module:engine/model/element~Element} modelElement
@@ -379,7 +378,7 @@ function createViewTableCellElement( tableSlot, tableAttributes, insertPosition,
 	conversionApi.mapper.bindElements( tableCell, cellElement );
 
 	// Additional requirement for data pipeline to have backward compatible data tables.
-	if ( !asWidget && !hasAnyAttribute( firstChild ) && isSingleParagraph ) {
+	if ( !asWidget && isSingleParagraph && !hasAnyAttribute( firstChild ) ) {
 		const innerParagraph = tableCell.getChild( 0 );
 
 		conversionApi.consumable.consume( innerParagraph, 'insert' );

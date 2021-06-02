@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -14,7 +14,7 @@ import Link from '@ckeditor/ckeditor5-link/src/link';
 import Strikethrough from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import List from '@ckeditor/ckeditor5-list/src/list';
 import ListStyle from '@ckeditor/ckeditor5-list/src/liststyle';
-import Image from '@ckeditor/ckeditor5-image/src/image';
+import ImageBlock from '@ckeditor/ckeditor5-image/src/imageblock';
 import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableProperties from '@ckeditor/ckeditor5-table/src/tableproperties';
 import TableCellProperties from '@ckeditor/ckeditor5-table/src/tablecellproperties';
@@ -45,7 +45,7 @@ describe( 'PasteFromOffice - integration', () => {
 		type: 'integration',
 		browsers,
 		editorConfig: {
-			plugins: [ Clipboard, Paragraph, Image, Table, PasteFromOffice ]
+			plugins: [ Clipboard, Paragraph, ImageBlock, Table, PasteFromOffice ]
 		},
 		skip: {
 			chrome: [],

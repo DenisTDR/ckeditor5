@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -11,7 +11,7 @@ ClassicEditor
 	.create( document.querySelector( '#snippet-image-toolbar' ), {
 		removePlugins: [ 'ImageCaption', 'ImageStyle', 'ImageResize', 'LinkImage', 'AutoImage' ],
 		image: {
-			toolbar: [ 'imageTextAlternative' ]
+			toolbar: [ 'toggleImageCaption', 'imageTextAlternative' ]
 		},
 		toolbar: {
 			viewportTopOffset: window.getViewportTopOffsetConfig()

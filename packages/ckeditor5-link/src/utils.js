@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -129,18 +129,18 @@ export function normalizeDecorators( decorators ) {
 }
 
 /**
- * Returns `true` if the specified `element` is an image and it can be linked (the element allows having the `linkHref` attribute).
+ * Returns `true` if the specified `element` can be linked (the element allows the `linkHref` attribute).
  *
  * @params {module:engine/model/element~Element|null} element
  * @params {module:engine/model/schema~Schema} schema
  * @returns {Boolean}
  */
-export function isImageAllowed( element, schema ) {
+export function isLinkableElement( element, schema ) {
 	if ( !element ) {
 		return false;
 	}
 
-	return element.is( 'element', 'image' ) && schema.checkAttribute( 'image', 'linkHref' );
+	return schema.checkAttribute( element.name, 'linkHref' );
 }
 
 /**

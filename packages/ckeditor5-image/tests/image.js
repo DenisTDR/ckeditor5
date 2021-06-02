@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2021, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
 
@@ -59,7 +59,7 @@ describe( 'Image', () => {
 
 	describe( 'selection', () => {
 		it( 'should create fake selection', () => {
-			setModelData( model, '[<image alt="alt text" src="/assets/sample.png"></image>]' );
+			setModelData( model, '[<imageBlock alt="alt text" src="/assets/sample.png"></imageBlock>]' );
 
 			expect( getViewData( view ) ).to.equal(
 				'[<figure class="' +
@@ -76,7 +76,7 @@ describe( 'Image', () => {
 		} );
 
 		it( 'should create proper fake selection label when alt attribute is empty', () => {
-			setModelData( model, '[<image src="/assets/sample.png" alt=""></image>]' );
+			setModelData( model, '[<imageBlock src="/assets/sample.png" alt=""></imageBlock>]' );
 
 			expect( getViewData( view ) ).to.equal(
 				'[<figure class="' +
@@ -94,8 +94,8 @@ describe( 'Image', () => {
 
 		it( 'should remove selected class from previously selected element', () => {
 			setModelData( model,
-				'[<image src="/assets/sample.png" alt="alt text"></image>]' +
-				'<image src="/assets/sample.png" alt="alt text"></image>'
+				'[<imageBlock src="/assets/sample.png" alt="alt text"></imageBlock>]' +
+				'<imageBlock src="/assets/sample.png" alt="alt text"></imageBlock>'
 			);
 
 			expect( getViewData( view ) ).to.equal(
@@ -122,18 +122,18 @@ describe( 'Image', () => {
 
 			expect( getViewData( view ) ).to.equal(
 				'<figure class="' +
-					'ck-widget ' +
-					'image" contenteditable="false"' +
+				'ck-widget ' +
+				'image" contenteditable="false"' +
 				'>' +
-					'<img alt="alt text" src="/assets/sample.png"></img>' +
-					'<div class="ck ck-reset_all ck-widget__type-around"></div>' +
+				'<img alt="alt text" src="/assets/sample.png"></img>' +
+				'<div class="ck ck-reset_all ck-widget__type-around"></div>' +
 				'</figure>' +
 				'[<figure class="' +
-					'ck-widget ' +
-					'ck-widget_selected image" contenteditable="false"' +
+				'ck-widget ' +
+				'ck-widget_selected image" contenteditable="false"' +
 				'>' +
-					'<img alt="alt text" src="/assets/sample.png"></img>' +
-					'<div class="ck ck-reset_all ck-widget__type-around"></div>' +
+				'<img alt="alt text" src="/assets/sample.png"></img>' +
+				'<div class="ck ck-reset_all ck-widget__type-around"></div>' +
 				'</figure>]'
 			);
 		} );
